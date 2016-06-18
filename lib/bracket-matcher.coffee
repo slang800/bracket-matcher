@@ -18,10 +18,10 @@ class BracketMatcher
     '`': '`'
 
   smartQuotePairs:
-    "“": "”"
+    '“': '”'
     '‘': '’'
-    "«": "»"
-    "‹": "›"
+    '«': '»'
+    '‹': '›'
 
   toggleQuotes: (includeSmartQuotes) ->
     if includeSmartQuotes
@@ -106,7 +106,7 @@ class BracketMatcher
     hasEscapeSequenceBeforeCursor = previousCharacters.match(/\\/g)?.length >= 1 # To guard against the "\\" sequence
     if @pairsToIndent[previousCharacter] is nextCharacter and not hasEscapeSequenceBeforeCursor
       @editor.transact =>
-        @editor.insertText "\n\n"
+        @editor.insertText '\n\n'
         @editor.moveUp()
         if @getScopedSetting('editor.autoIndent')
           cursorRow = @editor.getCursorBufferPosition().row
