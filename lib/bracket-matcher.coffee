@@ -59,12 +59,8 @@ class BracketMatcher
     hasWordAfterCursor = /\S/.test(nextCharacter)
     hasWordBeforeCursor = /\w/.test(previousCharacter)
     hasQuoteBeforeCursor = previousCharacter is text[0]
-    hasEscapeSequenceBeforeCursor = previousCharacters.match(/\\/g)?.length >= 1 # To guard against the "\\" sequence
-    hasClosingBracketAfterCursor = do (@pairsToIndent) ->
-      for op, cl of pairsToIndent
-        if cl is nextCharacter[0]
-          return true
-      return false
+    hasEscapeSequenceBeforeCursor = '\\' in previousCharacters # To guard against the '\\' sequence
+    hasClosingBracketAfterCursor = nextCharacter in _.values(@pairsToIndent)
 
     if text is '#' and @isCursorOnInterpolatedString()
       autoCompleteOpeningBracket = @getScopedSetting('bracket-matcher.autocompleteBrackets') and not hasEscapeSequenceBeforeCursor
@@ -103,7 +99,7 @@ class BracketMatcher
 
     previousCharacter = previousCharacters.slice(-1)
 
-    hasEscapeSequenceBeforeCursor = previousCharacters.match(/\\/g)?.length >= 1 # To guard against the "\\" sequence
+    hasEscapeSequenceBeforeCursor = '\\' in previousCharacters # To guard against the '\\' sequence
     if @pairsToIndent[previousCharacter] is nextCharacter and not hasEscapeSequenceBeforeCursor
       @editor.transact =>
         @editor.insertText '\n\n'
@@ -125,7 +121,7 @@ class BracketMatcher
 
     previousCharacter = previousCharacters.slice(-1)
 
-    hasEscapeSequenceBeforeCursor = previousCharacters.match(/\\/g)?.length >= 1 # To guard against the "\\" sequence
+    hasEscapeSequenceBeforeCursor = '\\' in previousCharacters # To guard against the '\\' sequence
     if (@pairedCharacters[previousCharacter] is nextCharacter) and not hasEscapeSequenceBeforeCursor and @getScopedSetting('bracket-matcher.autocompleteBrackets')
       @editor.transact =>
         @editor.moveLeft()
