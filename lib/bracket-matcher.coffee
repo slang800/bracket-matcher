@@ -204,19 +204,11 @@ class BracketMatcher
       @interpolatedStringSelector = SelectorCache.get(segments.join(' | '))
     @interpolatedStringSelector.matches(@editor.getLastCursor().getScopeDescriptor().getScopesArray())
 
-  getInvertedPairedCharacters: ->
-    return @invertedPairedCharacters if @invertedPairedCharacters
-
-    @invertedPairedCharacters = {}
-    for open, close of @pairedCharacters
-      @invertedPairedCharacters[close] = open
-    @invertedPairedCharacters
-
   isOpeningBracket: (string) ->
     @pairedCharacters.hasOwnProperty(string)
 
   isClosingBracket: (string) ->
-    @getInvertedPairedCharacters().hasOwnProperty(string)
+    string in _.values(@pairedCharacters)
 
   selectionIsWrappedByMatchingBrackets: (selection) ->
     return false if selection.isEmpty()
